@@ -70,6 +70,8 @@ On the breadboard there are rows of 5 pins that are all connected together.  The
 To build the application, you will need to clone your firmware.  Then copy the `air_arkanoid` folder to the `applications_user` folder in the firmware.  You can then build the firmware as normal.
 
 Connect your Flipper Zero, close qFlipper and run the following commands in a Command Window (cmd):
+
+OFFICIAL FIRMWARE (DEV BRANCH):
 ```cmd
 git clone --recursive https://github.com/flipperdevices/flipperzero-firmware.git
 git clone --recursive https://github.com/jamisonderek/flipperzero-changed-faps.git
@@ -81,5 +83,41 @@ fbt COMPACT=1 DEBUG=0 FORCE=1 flash_usb_full
 echo ** On your Flipper Zero: run Apps, Games, 2600 Arkanoid.
 ```
 
+MOMENTUM FIRMWARE (DEV BRANCH):
+```cmd
+git clone --recursive https://github.com/Next-Flip/Momentum-Firmware.git momentum-firmware
+git clone --recursive https://github.com/jamisonderek/flipperzero-changed-faps.git
+cd momentum-firmware
+cd applications_user
+xcopy /e ..\..\flipperzero-changed-faps\air_arkanoid air_arkanoid\*
+cd ..
+fbt COMPACT=1 DEBUG=0 FORCE=1 flash_usb_full
+echo ** On your Flipper Zero: run Apps, Games, 2600 Arkanoid.
+```
+
+ROGUEMASTER FIRMWARE (420 BRANCH):
+```cmd
+git clone --recursive https://github.com/RogueMaster/flipperzero-firmware-wPlugins.git roguemaster-firmware
+git clone --recursive https://github.com/jamisonderek/flipperzero-changed-faps.git
+cd roguemaster-firmware
+cd applications_user
+xcopy /e ..\..\flipperzero-changed-faps\air_arkanoid air_arkanoid\*
+cd ..
+fbt COMPACT=1 DEBUG=0 FORCE=1 flash_usb_full
+echo ** On your Flipper Zero: run Apps, Games, 2600 Arkanoid.
+```
+
+UNLEASHED FIRMWARE (DEV BRANCH):
+```cmd
+git clone --recursive https://github.com/DarkFlippers/unleashed-firmware unleashed-firmware
+git clone --recursive https://github.com/jamisonderek/flipperzero-changed-faps.git
+cd unleashed-firmware
+cd applications_user
+xcopy /e ..\..\flipperzero-changed-faps\air_arkanoid air_arkanoid\*
+cd ..
+fbt COMPACT=1 DEBUG=0 FORCE=1 flash_usb_full
+echo ** On your Flipper Zero: run Apps, Games, 2600 Arkanoid.
+```
+
 ## Support
-Support for the modifications can be found on my [Discord server](https://discord.com/invite/NsjCvqwPAd).
+Support for the 2600 modifications can be found on my [Discord server](https://discord.com/invite/NsjCvqwPAd).
