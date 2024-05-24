@@ -273,7 +273,7 @@ static void paddle_update(Entity* entity, GameManager* manager, void* context) {
         float mv = furi_hal_adc_convert_to_voltage(
             game_context->adc_handle,
             furi_hal_adc_read(game_context->adc_handle, game_context->paddle_button->channel));
-        if(mv < 10) {
+        if(mv < 20) {
             if(!paddle->ball_launched) {
                 paddle->ball_launched = true;
 
