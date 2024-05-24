@@ -41,7 +41,7 @@ Optional:
 
 ### Wiring
 ![Atari 2600 Paddle Controller](./2600.png)
-On the breadboard there are rows of 5 pins that are all connected together.  The columns are not connected. The rows on the other side are also connected together, but the two rows are not connected to each other.  We will use one row for GND and then a few columns over, we will use another row for VCC.  Then we will use a row for C1 (which is our button) and a row for C0 (which is our paddle controller).  For simplicity, we will put the C1 row on the other side of the breadboard from the C0 row; leaving a big gap in case you want to add your resistors between C0 and VCC.
+On the breadboard there are rows of 5 pins that are all connected together.  The columns are not connected. The rows on the other side are also connected together, but the two rows are not connected to each other.  We will use one row for GND and then a few columns over, we will use another row for 3V3.  Then we will use a row for C1 (which is our button) and a row for C0 (which is our paddle controller).  For simplicity, we will put the C1 row on the other side of the breadboard from the C0 row; leaving a big gap in case you want to add your resistors between C0 and 3V3.
 
 - D-sub connector, pin 8 to GND on breadboard (or direct to GND on FZ). **Blue wire**
 - D-sub connector, pin 7 to GND on breadboard (or direct to GND on FZ). **Blue wire**
@@ -49,14 +49,19 @@ On the breadboard there are rows of 5 pins that are all connected together.  The
 - D-sub connector, pin 4 to C1 on breadboard (or direct to C1 on FZ). **Yellow wire**
 
 - Connect the 2-220K ohm resistors in series (making a 440K ohm resistor).
-  - Connect one end of resistor to VCC on breadboard.  **Red wire**
+  - Connect one end of resistor to 3V3 on breadboard.  **Red wire**
   - Connect the other end of other resistor to C0 on breadboard. **White wire**
 
-- Connect VGM VCC to VCC on breadboard. **Red wire**
+- Connect VGM 3V3 to 3V3 on breadboard. **Red wire**
 - Connect VGM GND to GND on breadboard (or direct to GND on FZ). **Blue wire**
 
 - Connect VGM TX to TX on Flipper Zero (we are extending the TX wire, so don't swap with RX like you would for UART communication). **Purple wire**
 - Connect VGM RX to RX on Flipper Zero. **Grey wire**
+
+- Connect Flipper 3V3 to 3V3 on breadboard. **Red wire**
+- Connect Flipper GND to GND on breadboard. **Blue wire**
+- Connect Flipper C1 to C1 on breadboard. **Yellow wire**
+- Connect Flipper C0 to C0 on breadboard. **White wire**
 
 - Connect the Atari 2600 paddle controller to the D-sub connector.
 
