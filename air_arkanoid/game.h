@@ -2,6 +2,9 @@
 #include "engine/engine.h"
 #include "engine/sensors/imu.h"
 #include <notification/notification_messages.h>
+#include <furi_hal.h>
+
+#define TAG "Arkanoid"
 
 typedef struct {
     Level* menu;
@@ -18,6 +21,11 @@ typedef struct {
 typedef struct {
     Imu* imu;
     bool imu_present;
+
+    FuriHalAdcHandle* adc_handle;
+    const GpioPinRecord* paddle_left;
+    const GpioPinRecord* paddle_button;
+    bool paddle_present;
 
     Levels levels;
     Settings settings;

@@ -35,7 +35,7 @@ static void
 
     if(sprite_context->sprite) {
         Vector pos = entity_pos_get(entity);
-        canvas_draw_sprite(canvas, sprite_context->sprite, pos.x, pos.y);
+        canvas_draw_sprite(canvas, sprite_context->sprite, (int32_t)pos.x, (int32_t)pos.y);
     }
 }
 
@@ -51,6 +51,11 @@ static void moving_sprite_init(
     sprite_context->duration = 30.0f;
     sprite_context->time = 0;
     sprite_context->sprite = game_manager_sprite_load(manager, sprite_name);
+    if(sprite_context->sprite) {
+        FURI_LOG_D(TAG, "Loaded sprite %s", sprite_name);
+    } else {
+        FURI_LOG_D(TAG, "Failed to load sprite %s", sprite_name);
+    }
 }
 
 static void moving_sprite_reset(Entity* entity) {
@@ -163,7 +168,7 @@ typedef struct {
 static void level_menu_alloc(Level* level, GameManager* manager, void* context) {
     LevelMenuContext* menu_context = context;
 
-    const float start = 256; // 0, due to the canvas draw limitations
+    const float start = 0; // 0, due to the canvas draw limitations
 
     menu_context->arkanoid = level_add_entity(level, &moving_sprite_desc);
     moving_sprite_init(
@@ -173,13 +178,23 @@ static void level_menu_alloc(Level* level, GameManager* manager, void* context) 
         (Vector){.x = start + 7, .y = start + 11},
         "logo_arkanoid.fxbm");
 
+    GameContext* game_context = game_manager_game_context_get(manager);
+    char* logo_file = NULL;
+    if(game_context->paddle_present) {
+        logo_file = "logo_2600.fxbm";
+    } else if(game_context->imu_present) {
+        logo_file = "logo_air.fxbm";
+    } else {
+        logo_file = "logo_no_imu.fxbm";
+    }
+
     menu_context->air = level_add_entity(level, &moving_sprite_desc);
     moving_sprite_init(
         menu_context->air,
         manager,
         (Vector){.x = start + 20, .y = start - 27},
         (Vector){.x = start + 20, .y = start + 0},
-        "logo_air.fxbm");
+        logo_file);
 
     level_add_entity(level, &menu_desc);
 }

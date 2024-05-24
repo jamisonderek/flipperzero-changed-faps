@@ -19,10 +19,41 @@ const NotificationSequence sequence_sound_menu = {
     NULL,
 };
 
+const GpioPinRecord* find_gpio_pin(const GpioPin* pin) {
+    for(size_t i = 0; i < gpio_pins_count; i++) {
+        if(gpio_pins[i].pin == pin) {
+            return &gpio_pins[i];
+        }
+    }
+
+    return NULL;
+}
+
 void game_start(GameManager* game_manager, void* ctx) {
     GameContext* context = ctx;
     context->imu = imu_alloc();
     context->imu_present = imu_present(context->imu);
+
+    context->adc_handle = furi_hal_adc_acquire();
+    furi_hal_adc_configure(context->adc_handle); // 0-2048 mV range (for ~10KOhm sensors)
+
+    context->paddle_left = find_gpio_pin(&gpio_ext_pc0);
+    furi_assert(context->paddle_left);
+    furi_hal_gpio_init(context->paddle_left->pin, GpioModeAnalog, GpioPullNo, GpioSpeedLow);
+
+    context->paddle_button = find_gpio_pin(&gpio_ext_pc1);
+    furi_assert(context->paddle_button);
+    furi_hal_gpio_init(context->paddle_button->pin, GpioModeAnalog, GpioPullNo, GpioSpeedLow);
+
+    context->paddle_present = false;
+    float voltage = furi_hal_adc_convert_to_voltage(
+        context->adc_handle,
+        furi_hal_adc_read(context->adc_handle, context->paddle_left->channel));
+    // Detect paddle if it is in the extreme position (full left/right)
+    if(voltage < 50 || voltage > 1500) {
+        context->paddle_present = true;
+    }
+
     context->levels.menu = game_manager_add_level(game_manager, &level_menu);
     context->levels.settings = game_manager_add_level(game_manager, &level_settings);
     context->levels.game = game_manager_add_level(game_manager, &level_game);
@@ -42,6 +73,7 @@ void game_start(GameManager* game_manager, void* ctx) {
 void game_stop(void* ctx) {
     GameContext* context = ctx;
     imu_free(context->imu);
+    furi_hal_adc_release(context->adc_handle);
 
     furi_record_close(RECORD_NOTIFICATION);
 }

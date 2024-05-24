@@ -227,7 +227,15 @@ static void paddle_update(Entity* entity, GameManager* manager, void* context) {
 
     Vector pos = entity_pos_get(entity);
     float paddle_half = paddle->size.x / 2;
-    if(game_context->imu_present) {
+
+    if(game_context->paddle_present) {
+        FuriHalAdcChannel channel = game_context->paddle_left->channel;
+        float mv = furi_hal_adc_convert_to_voltage(
+            game_context->adc_handle, furi_hal_adc_read(game_context->adc_handle, channel));
+        mv -= 700;
+        mv /= 6.25; // Paddle movement is in the 700mv to 1500mv range.
+        pos.x = 128 - mv;
+    } else if(game_context->imu_present) {
         pos.x = paddle_x_from_angle(-imu_pitch_get(game_context->imu));
     } else {
         if(input.held & GameKeyLeft) {
@@ -244,6 +252,14 @@ static void paddle_update(Entity* entity, GameManager* manager, void* context) {
         game_manager_next_level_set(manager, game_context->levels.menu);
     }
 
+    if(!paddle->ball_launched) {
+        Vector ball_pos = entity_pos_get(paddle->ball);
+        Ball* ball = entity_context_get(paddle->ball);
+        ball_pos.x = pos.x;
+        ball_pos.y = pos.y - paddle->size.y / 2 - ball->radius;
+        entity_pos_set(paddle->ball, ball_pos);
+    }
+
     if(input.pressed & GameKeyOk) {
         if(!paddle->ball_launched) {
             paddle->ball_launched = true;
@@ -253,12 +269,18 @@ static void paddle_update(Entity* entity, GameManager* manager, void* context) {
         }
     }
 
-    if(!paddle->ball_launched) {
-        Vector ball_pos = entity_pos_get(paddle->ball);
-        Ball* ball = entity_context_get(paddle->ball);
-        ball_pos.x = pos.x;
-        ball_pos.y = pos.y - paddle->size.y / 2 - ball->radius;
-        entity_pos_set(paddle->ball, ball_pos);
+    if(game_context->paddle_present) {
+        float mv = furi_hal_adc_convert_to_voltage(
+            game_context->adc_handle,
+            furi_hal_adc_read(game_context->adc_handle, game_context->paddle_button->channel));
+        if(mv < 10) {
+            if(!paddle->ball_launched) {
+                paddle->ball_launched = true;
+
+                Ball* ball = entity_context_get(paddle->ball);
+                ball_set_angle(ball, 270.0f);
+            }
+        }
     }
 }
 
