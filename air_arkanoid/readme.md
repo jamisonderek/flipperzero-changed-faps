@@ -75,9 +75,10 @@ git clone --recursive https://github.com/flipperdevices/flipperzero-firmware.git
 git clone --recursive https://github.com/jamisonderek/flipperzero-changed-faps.git
 cd flipperzero-firmware
 cd applications_user
-xcopy -e ../../flipperzero-changed-faps/air_arkanoid .
+xcopy /e ..\..\flipperzero-changed-faps\air_arkanoid air_arkanoid\*
 cd ..
 fbt COMPACT=1 DEBUG=0 FORCE=1 flash_usb_full
+echo ** On your Flipper Zero: run Apps, Games, 2600 Arkanoid.
 ```
 
 ## Support
